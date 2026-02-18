@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:maleva_spins/components/album_list.dart';
+import 'package:maleva_spins/models/discogs_collection.dart';
 import '../services/discogs_api_service.dart';
 import '../storage/auth_storage.dart';
 import '../models/discogs_user.dart';
@@ -15,10 +17,19 @@ class _HomePageState extends State<HomePage> {
   DiscogsUser? _user;
   bool _isLoading = true;
 
+  DiscogsCollection? _collection;
+
   @override
   void initState() {
     super.initState();
-    _initializeApi();
+    _initializeAndFetchAlbums();
+  }
+
+  Future<void> _initializeAndFetchAlbums() async {
+    await _initializeApi();
+    if (_user != null) {
+      await _fetchAlbums();
+    }
   }
 
   Future<void> _initializeApi() async {
@@ -53,12 +64,34 @@ class _HomePageState extends State<HomePage> {
     }
   }
 
+  Future<void> _fetchAlbums() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    if (_apiService == null || _user == null) return;
+    try {
+      final collection = await _apiService!.getUserCollection(_user!.username);
+      if (mounted) {
+        setState(() {
+          _collection = collection;
+        });
+      }
+    } catch (e) {
+      debugPrint('Error fetching albums: $e');
+    } finally {
+      setState(() {
+        _isLoading = false;
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: _isLoading
-            ? const Text('Maleva Vinyl')
+            ? const Text('Maleva Spins', style: TextStyle(fontSize: 20))
             : Row(
                 spacing: 12,
                 children: [
@@ -77,26 +110,42 @@ class _HomePageState extends State<HomePage> {
                       },
                     ),
                   ),
-                  Text(_user?.username ?? 'Maleva Vinyl'),
+                  Text('Maleva Spins'),
                 ],
               ),
         actions: [
           IconButton(icon: const Icon(Icons.logout), onPressed: _logout),
         ],
+        scrolledUnderElevation: 0,
+        backgroundColor: Theme.of(context).colorScheme.surface,
+        surfaceTintColor: Colors.transparent,
       ),
       body: _isLoading
-          ? const Center(
-              child: CircularProgressIndicator(color: Color(0xFFE74C3C)),
-            )
-          : Center(
-              child: Text(
-                'Bem-vindo, ${_user?.username ?? 'usuário'}!',
-                style: const TextStyle(
-                  fontSize: 24,
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                ),
+          ? Center(
+              child: CircularProgressIndicator(
+                color: Theme.of(context).colorScheme.primary,
               ),
+            )
+          : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Padding(
+                  padding: const EdgeInsets.all(16.0),
+                  child: Text(
+                    'Bem-vindo, ${_user?.username ?? 'usuário'}!',
+                    style: TextStyle(
+                      fontSize: 24,
+                      color: Theme.of(context).colorScheme.onSurface,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                _isLoading
+                    ? const Expanded(
+                        child: Center(child: CircularProgressIndicator()),
+                      )
+                    : Expanded(child: AlbumList(albums: _collection)),
+              ],
             ),
     );
   }
