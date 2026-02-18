@@ -1,12 +1,13 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:oauth1/oauth1.dart' as oauth1;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:app_links/app_links.dart';
 import 'dart:async';
 
 class DiscogsAuthService {
-  static const _callbackScheme = 'maleva';
-  static const _consumerKey = 'vOMZRxwQHEwtWGNAzmzY';
-  static const _consumerSecret = 'nBVwnBUmRadkGSkAdFnOQXsrbbrkvDgK';
+  static String get _callbackScheme => dotenv.env['CALLBACKSCHEME']!;
+  static String get _consumerKey => dotenv.env['CONSUMERKEY']!;
+  static String get _consumerSecret => dotenv.env['CONSUMERSECRET']!;
 
   final oauth1.Platform _platform = oauth1.Platform(
     'https://api.discogs.com/oauth/request_token',

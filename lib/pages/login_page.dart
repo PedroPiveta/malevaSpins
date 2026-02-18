@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:maleva_spins/services/discogs_auth_service.dart';
+import 'package:maleva_spins/storage/auth_storage.dart';
 
 class LoginPage extends StatefulWidget {
   const LoginPage({super.key});
@@ -10,10 +11,40 @@ class LoginPage extends StatefulWidget {
 }
 
 class _LoginPageState extends State<LoginPage> {
+  @override
+  void initState() {
+    super.initState();
+    _checkLogin();
+  }
+
   final _authService = DiscogsAuthService();
 
   bool _isLoading = false;
   String? _error;
+
+  Future<void> _checkLogin() async {
+    setState(() {
+      _isLoading = true;
+    });
+
+    try {
+      final loggedIn = await AuthStorage.isLoggedIn();
+      if (loggedIn) {
+        if (!mounted) return;
+        Navigator.pushReplacementNamed(context, "/home");
+      }
+    } catch (e) {
+      setState(() {
+        _error = 'Erro ao verificar login';
+      });
+    } finally {
+      if (mounted) {
+        setState(() {
+          _isLoading = false;
+        });
+      }
+    }
+  }
 
   Future<void> _handleLogin() async {
     setState(() {
@@ -22,7 +53,9 @@ class _LoginPageState extends State<LoginPage> {
     });
 
     try {
-      await _authService.login();
+      final credentials = await _authService.login();
+
+      await AuthStorage.saveCredentials(credentials);
 
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, "/home");
@@ -54,14 +87,13 @@ class _LoginPageState extends State<LoginPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: const Color(0xFF0F0F12),
       body: Center(
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 32),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              const Icon(Icons.album, size: 80, color: Colors.white),
+              const Icon(Icons.album, size: 80),
               const SizedBox(height: 24),
 
               const Text(
@@ -69,7 +101,6 @@ class _LoginPageState extends State<LoginPage> {
                 style: TextStyle(
                   fontSize: 28,
                   fontWeight: FontWeight.bold,
-                  color: Colors.white,
                   letterSpacing: 1.2,
                 ),
               ),
@@ -78,7 +109,7 @@ class _LoginPageState extends State<LoginPage> {
 
               const Text(
                 "Conecte sua coleção do Discogs",
-                style: TextStyle(fontSize: 16, color: Colors.white70),
+                style: TextStyle(fontSize: 16),
               ),
 
               const SizedBox(height: 40),
@@ -92,7 +123,6 @@ class _LoginPageState extends State<LoginPage> {
                   child: ElevatedButton(
                     onPressed: _handleLogin,
                     style: ElevatedButton.styleFrom(
-                      backgroundColor: const Color(0xFFE74C3C),
                       shape: RoundedRectangleBorder(
                         borderRadius: BorderRadius.circular(12),
                       ),
@@ -109,7 +139,7 @@ class _LoginPageState extends State<LoginPage> {
 
               if (_error != null) ...[
                 const SizedBox(height: 20),
-                Text(_error!, style: const TextStyle(color: Colors.redAccent)),
+                Text(_error!),
               ],
             ],
           ),
