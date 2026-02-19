@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:maleva_spins/components/album_list.dart';
+import 'package:maleva_spins/components/pill_tab_view.dart';
 import 'package:maleva_spins/models/discogs_collection.dart';
 import '../services/discogs_api_service.dart';
 import '../storage/auth_storage.dart';
@@ -127,10 +128,10 @@ class _HomePageState extends State<HomePage> {
               ),
             )
           : Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
                 Padding(
-                  padding: const EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
                   child: Text(
                     'Bem-vindo, ${_user?.username ?? 'usuário'}!',
                     style: TextStyle(
@@ -140,11 +141,36 @@ class _HomePageState extends State<HomePage> {
                     ),
                   ),
                 ),
-                _isLoading
-                    ? const Expanded(
-                        child: Center(child: CircularProgressIndicator()),
-                      )
-                    : Expanded(child: AlbumList(albums: _collection)),
+                const SizedBox(height: 16),
+                Expanded(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(12),
+                    child: PillTabView(
+                      tabs: [
+                        (
+                          label: 'Coleção',
+                          icon: Icons.album,
+                          child: Padding(
+                            padding: const EdgeInsets.symmetric(horizontal: 4),
+                            child: AlbumList(albums: _collection),
+                          ),
+                        ),
+                        (
+                          label: 'Histórico',
+                          icon: Icons.history,
+                          child: Center(
+                            child: Text(
+                              'Histórico em breve',
+                              style: TextStyle(
+                                color: Theme.of(context).colorScheme.onSurface,
+                              ),
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
               ],
             ),
     );
