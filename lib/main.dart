@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:maleva_spins/pages/home_page.dart';
 import 'package:maleva_spins/pages/login_page.dart';
+import 'package:maleva_spins/services/listening_timer_service.dart';
 import 'theme/util.dart';
 import 'theme/theme.dart';
 
 Future main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   await dotenv.load(fileName: ".env");
+
+  FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
+      FlutterLocalNotificationsPlugin();
+
+  flutterLocalNotificationsPlugin
+      .resolvePlatformSpecificImplementation<
+        AndroidFlutterLocalNotificationsPlugin
+      >()
+      ?.requestNotificationsPermission();
+
+  await ListeningTimerService().initialize();
 
   runApp(const MyApp());
 }

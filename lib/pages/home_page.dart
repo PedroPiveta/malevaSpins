@@ -1,7 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:maleva_spins/components/album_list.dart';
+import 'package:maleva_spins/pages/album_list_page.dart';
+import 'package:maleva_spins/components/global_timer_badge.dart';
+import 'package:maleva_spins/components/now_playing_card.dart';
 import 'package:maleva_spins/components/pill_tab_view.dart';
 import 'package:maleva_spins/models/discogs_collection.dart';
+import 'package:maleva_spins/pages/history_page.dart';
+import 'package:maleva_spins/services/listening_timer_service.dart';
 import '../services/discogs_api_service.dart';
 import '../storage/auth_storage.dart';
 import '../models/discogs_user.dart';
@@ -19,11 +23,26 @@ class _HomePageState extends State<HomePage> {
   bool _isLoading = true;
 
   DiscogsCollection? _collection;
+  final _timerService = ListeningTimerService();
 
   @override
   void initState() {
     super.initState();
     _initializeAndFetchAlbums();
+    // Listener para atualizar UI quando o timer mudar
+    _timerService.addListener(_onTimerUpdate);
+  }
+
+  @override
+  void dispose() {
+    _timerService.removeListener(_onTimerUpdate);
+    super.dispose();
+  }
+
+  void _onTimerUpdate() {
+    if (mounted) {
+      setState(() {});
+    }
   }
 
   Future<void> _initializeAndFetchAlbums() async {
@@ -73,6 +92,14 @@ class _HomePageState extends State<HomePage> {
     if (_apiService == null || _user == null) return;
     try {
       final collection = await _apiService!.getUserCollection(_user!.username);
+      collection.items.sort(
+        (a, b) => a.basicInfo.artists
+            .map((artist) => artist.name)
+            .join(', ')
+            .compareTo(
+              b.basicInfo.artists.map((artist) => artist.name).join(', '),
+            ),
+      );
       if (mounted) {
         setState(() {
           _collection = collection;
@@ -84,6 +111,13 @@ class _HomePageState extends State<HomePage> {
       setState(() {
         _isLoading = false;
       });
+    }
+  }
+
+  Future<void> _stopListening() async {
+    await _timerService.stopListening();
+    if (mounted) {
+      setState(() {});
     }
   }
 
@@ -130,17 +164,17 @@ class _HomePageState extends State<HomePage> {
           : Column(
               crossAxisAlignment: CrossAxisAlignment.stretch,
               children: [
-                Padding(
-                  padding: const EdgeInsets.fromLTRB(16.0, 16.0, 16.0, 0),
-                  child: Text(
-                    'Bem-vindo, ${_user?.username ?? 'usuário'}!',
-                    style: TextStyle(
-                      fontSize: 24,
-                      color: Theme.of(context).colorScheme.onSurface,
-                      fontWeight: FontWeight.bold,
-                    ),
+                // Timer Global (visível apenas quando não estiver tocando nada)
+                if (_timerService.isPlaying == false) const GlobalTimerBadge(),
+
+                // Card "Now Playing" se estiver tocando algo
+                if (_timerService.isPlaying &&
+                    _timerService.currentSession != null)
+                  NowPlayingCard(
+                    session: _timerService.currentSession!,
+                    onStop: _stopListening,
                   ),
-                ),
+
                 const SizedBox(height: 16),
                 Expanded(
                   child: ClipRRect(
@@ -152,20 +186,13 @@ class _HomePageState extends State<HomePage> {
                           icon: Icons.album,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: AlbumList(albums: _collection),
+                            child: AlbumListPage(albums: _collection),
                           ),
                         ),
                         (
                           label: 'Histórico',
                           icon: Icons.history,
-                          child: Center(
-                            child: Text(
-                              'Histórico em breve',
-                              style: TextStyle(
-                                color: Theme.of(context).colorScheme.onSurface,
-                              ),
-                            ),
-                          ),
+                          child: const HistoryPage(),
                         ),
                       ],
                     ),

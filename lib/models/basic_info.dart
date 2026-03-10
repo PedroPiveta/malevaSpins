@@ -1,3 +1,5 @@
+import 'package:maleva_spins/models/track.dart';
+
 import 'artist.dart';
 import 'label.dart';
 
@@ -9,6 +11,7 @@ class BasicInfo {
   final String? coverImage;
   final List<Artist> artists;
   final List<Label> labels;
+  final List<Track>? tracklist;
 
   BasicInfo({
     required this.id,
@@ -18,6 +21,7 @@ class BasicInfo {
     this.coverImage,
     required this.artists,
     required this.labels,
+    this.tracklist,
   });
 
   factory BasicInfo.fromJson(Map<String, dynamic> json) {
@@ -31,6 +35,11 @@ class BasicInfo {
           .map((a) => Artist.fromJson(a))
           .toList(),
       labels: (json['labels'] as List).map((l) => Label.fromJson(l)).toList(),
+      tracklist: json['tracklist'] != null
+          ? (json['tracklist'] as List)
+                .map((t) => Track(title: t['title'], duration: t['duration']))
+                .toList()
+          : null,
     );
   }
 }

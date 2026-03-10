@@ -1,11 +1,12 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:oauth1/oauth1.dart' as oauth1;
 import '../models/discogs_user.dart';
 import '../models/discogs_collection.dart';
 
 class DiscogsApiService {
-  static const _consumerKey = 'vOMZRxwQHEwtWGNAzmzY';
-  static const _consumerSecret = 'nBVwnBUmRadkGSkAdFnOQXsrbbrkvDgK';
+  static String get _consumerKey => dotenv.env['CONSUMERKEY']!;
+  static String get _consumerSecret => dotenv.env['CONSUMERSECRET']!;
   static const _baseUrl = 'https://api.discogs.com';
 
   final oauth1.Credentials _credentials;
@@ -38,7 +39,6 @@ class DiscogsApiService {
       final data = json.decode(response.body);
       final user = DiscogsUser.fromJson(data);
 
-      // Fetch full profile to get avatar_url
       final profileResponse = await _client.get(
         Uri.parse('$_baseUrl/users/${user.username}'),
       );

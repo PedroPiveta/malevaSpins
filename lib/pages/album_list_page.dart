@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:maleva_spins/components/single_album.dart';
 import 'package:maleva_spins/models/discogs_collection.dart';
 
-class AlbumList extends StatelessWidget {
+class AlbumListPage extends StatelessWidget {
   final DiscogsCollection? albums;
 
-  const AlbumList({super.key, this.albums});
+  const AlbumListPage({super.key, this.albums});
 
   @override
   Widget build(BuildContext context) {
