@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:maleva_spins/models/collection_item.dart';
 import 'package:maleva_spins/pages/album_details_page.dart';
+import 'package:maleva_spins/services/discogs_api_service.dart';
 
 class SingleAlbum extends StatelessWidget {
-  const SingleAlbum({super.key, required this.album});
+  const SingleAlbum({super.key, required this.album, required this.apiService});
 
   final CollectionItem album;
+  final DiscogsApiService apiService;
 
   @override
   Widget build(BuildContext context) {
@@ -17,7 +19,7 @@ class SingleAlbum extends StatelessWidget {
             transitionDuration: const Duration(milliseconds: 500),
             reverseTransitionDuration: const Duration(milliseconds: 500),
             pageBuilder: (_, animation, secondaryAnimation) =>
-                AlbumDetailsPage(album: album),
+                AlbumDetailsPage(album: album, apiService: apiService),
             transitionsBuilder: (_, animation, secondaryAnimation, child) {
               final curved = CurvedAnimation(
                 parent: animation,

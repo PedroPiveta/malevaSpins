@@ -1,11 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:maleva_spins/components/single_album.dart';
 import 'package:maleva_spins/models/discogs_collection.dart';
+import 'package:maleva_spins/services/discogs_api_service.dart';
 
 class AlbumListPage extends StatelessWidget {
   final DiscogsCollection? albums;
+  final DiscogsApiService? apiService;
 
-  const AlbumListPage({super.key, this.albums});
+  const AlbumListPage({super.key, this.albums, this.apiService});
 
   @override
   Widget build(BuildContext context) {
@@ -19,7 +21,10 @@ class AlbumListPage extends StatelessWidget {
       return ListView.builder(
         itemCount: albums!.items.length,
         itemBuilder: (context, index) {
-          return SingleAlbum(album: albums!.items[index]);
+          return SingleAlbum(
+            album: albums!.items[index],
+            apiService: apiService!,
+          );
         },
       );
     }
