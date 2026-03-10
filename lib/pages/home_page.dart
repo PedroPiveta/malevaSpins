@@ -186,7 +186,10 @@ class _HomePageState extends State<HomePage> {
                           icon: Icons.album,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: AlbumListPage(albums: _collection),
+                            child: AlbumListPage(
+                              albums: _collection,
+                              apiService: _apiService,
+                            ),
                           ),
                         ),
                         (
