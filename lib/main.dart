@@ -32,6 +32,7 @@ Future main() async {
     "Firebase initialized with options: ${DefaultFirebaseOptions.currentPlatform}",
   );
 
+  await FirebaseAnalytics.instance.setAnalyticsCollectionEnabled(true);
   await FirebaseAnalytics.instance.logEvent(name: 'teste_debug');
 
   await ListeningTimerService().initialize();

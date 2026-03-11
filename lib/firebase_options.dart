@@ -41,13 +41,13 @@ class DefaultFirebaseOptions {
   }
 
   static const FirebaseOptions web = FirebaseOptions(
-    apiKey: 'AIzaSyAXRbZ4KVMNA05Xjoe5EAJBHSzqTypzbdA',
-    appId: '1:125598521875:web:3e9fac96e2508ea71e3de6',
-    messagingSenderId: '125598521875',
-    projectId: 'maleva-spins',
-    authDomain: 'maleva-spins.firebaseapp.com',
-    storageBucket: 'maleva-spins.firebasestorage.app',
-    measurementId: 'G-M9S0MGXY70',
+    apiKey: 'AIzaSyBltxSx53oMP3K5Vl3vKb3J8JOJmYhSFjI',
+    appId: '1:1090635195563:web:1b0c783710a0afa43183ee',
+    messagingSenderId: '1090635195563',
+    projectId: 'malevaspins',
+    authDomain: 'malevaspins.firebaseapp.com',
+    storageBucket: 'malevaspins.firebasestorage.app',
+    measurementId: 'G-S0VQ20ZZPG',
   );
 
   static const FirebaseOptions android = FirebaseOptions(
@@ -59,30 +59,31 @@ class DefaultFirebaseOptions {
   );
 
   static const FirebaseOptions ios = FirebaseOptions(
-    apiKey: 'AIzaSyDPFhJy6PSLW1cyETJHP2a38ISA_GOB5SY',
-    appId: '1:125598521875:ios:787cb214f21df7f91e3de6',
-    messagingSenderId: '125598521875',
-    projectId: 'maleva-spins',
-    storageBucket: 'maleva-spins.firebasestorage.app',
+    apiKey: 'AIzaSyBDLxhvZuIX7DEUtnZNj9KpD_7X-FlJSFU',
+    appId: '1:1090635195563:ios:bd248718f1d7430d3183ee',
+    messagingSenderId: '1090635195563',
+    projectId: 'malevaspins',
+    storageBucket: 'malevaspins.firebasestorage.app',
     iosBundleId: 'com.example.malevaSpins',
   );
 
   static const FirebaseOptions macos = FirebaseOptions(
-    apiKey: 'AIzaSyDPFhJy6PSLW1cyETJHP2a38ISA_GOB5SY',
-    appId: '1:125598521875:ios:787cb214f21df7f91e3de6',
-    messagingSenderId: '125598521875',
-    projectId: 'maleva-spins',
-    storageBucket: 'maleva-spins.firebasestorage.app',
+    apiKey: 'AIzaSyBDLxhvZuIX7DEUtnZNj9KpD_7X-FlJSFU',
+    appId: '1:1090635195563:ios:bd248718f1d7430d3183ee',
+    messagingSenderId: '1090635195563',
+    projectId: 'malevaspins',
+    storageBucket: 'malevaspins.firebasestorage.app',
     iosBundleId: 'com.example.malevaSpins',
   );
 
   static const FirebaseOptions windows = FirebaseOptions(
-    apiKey: 'AIzaSyAXRbZ4KVMNA05Xjoe5EAJBHSzqTypzbdA',
-    appId: '1:125598521875:web:86c40cad6edd46091e3de6',
-    messagingSenderId: '125598521875',
-    projectId: 'maleva-spins',
-    authDomain: 'maleva-spins.firebaseapp.com',
-    storageBucket: 'maleva-spins.firebasestorage.app',
-    measurementId: 'G-3FN7XHVVH7',
+    apiKey: 'AIzaSyBltxSx53oMP3K5Vl3vKb3J8JOJmYhSFjI',
+    appId: '1:1090635195563:web:c7b4bf0102c5496a3183ee',
+    messagingSenderId: '1090635195563',
+    projectId: 'malevaspins',
+    authDomain: 'malevaspins.firebaseapp.com',
+    storageBucket: 'malevaspins.firebasestorage.app',
+    measurementId: 'G-CVJSEC3T86',
   );
+
 }

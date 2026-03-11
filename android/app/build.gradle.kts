@@ -13,10 +13,6 @@ android {
     compileSdk = flutter.compileSdkVersion
     ndkVersion = flutter.ndkVersion
 
-    defaultConfig {
-        multiDexEnabled = true
-    }
-
     compileOptions {
         isCoreLibraryDesugaringEnabled = true
 
@@ -37,6 +33,7 @@ android {
         targetSdk = flutter.targetSdkVersion
         versionCode = flutter.versionCode
         versionName = flutter.versionName
+        multiDexEnabled = true
     }
 
     buildTypes {
