@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:maleva_spins/services/analytics_service.dart';
 import 'package:maleva_spins/pages/album_list_page.dart';
 import 'package:maleva_spins/components/global_timer_badge.dart';
 import 'package:maleva_spins/components/now_playing_card.dart';
@@ -78,6 +79,7 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _logout() async {
+    await AnalyticsService().logLogout();
     await AuthStorage.clearCredentials();
     if (mounted) {
       Navigator.pushReplacementNamed(context, '/');
@@ -104,6 +106,7 @@ class _HomePageState extends State<HomePage> {
         setState(() {
           _collection = collection;
         });
+        await AnalyticsService().logCollectionLoaded(collection.items.length);
       }
     } catch (e) {
       debugPrint('Error fetching albums: $e');
@@ -115,7 +118,14 @@ class _HomePageState extends State<HomePage> {
   }
 
   Future<void> _stopListening() async {
+    final session = _timerService.currentSession;
     await _timerService.stopListening();
+    if (session != null) {
+      await AnalyticsService().logListeningStopped(
+        albumId: session.albumId,
+        durationSeconds: session.elapsedTime.inSeconds,
+      );
+    }
     if (mounted) {
       setState(() {});
     }
@@ -186,7 +196,10 @@ class _HomePageState extends State<HomePage> {
                           icon: Icons.album,
                           child: Padding(
                             padding: const EdgeInsets.symmetric(horizontal: 4),
-                            child: AlbumListPage(albums: _collection),
+                            child: AlbumListPage(
+                              albums: _collection,
+                              apiService: _apiService,
+                            ),
                           ),
                         ),
                         (

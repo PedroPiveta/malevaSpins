@@ -1,0 +1,29 @@
+{
+  "project_info": {
+    "project_number": "1090635195563",
+    "project_id": "malevaspins",
+    "storage_bucket": "malevaspins.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:1090635195563:android:595b46afad1e7e8a3183ee",
+        "android_client_info": {
+          "package_name": "com.example.maleva_spins"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCozE_1gmGuR6D_MkAl03xX0kp3Dylzhkk"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
