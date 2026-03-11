@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:maleva_spins/services/analytics_service.dart';
 import 'package:maleva_spins/services/discogs_auth_service.dart';
 import 'package:maleva_spins/storage/auth_storage.dart';
 
@@ -57,21 +58,26 @@ class _LoginPageState extends State<LoginPage> {
 
       await AuthStorage.saveCredentials(credentials);
 
+      await AnalyticsService().logLogin();
+
       if (!mounted) return;
       Navigator.pushReplacementNamed(context, "/home");
     } on PlatformException catch (e) {
       if (!mounted) return;
 
       if (e.code == 'CANCELED') {
+        await AnalyticsService().logLoginError('canceled');
         setState(() {
           _error = 'Login cancelado';
         });
       } else {
+        await AnalyticsService().logLoginError(e.message ?? 'platform_error');
         setState(() {
           _error = 'Erro: ${e.message}';
         });
       }
     } catch (e) {
+      await AnalyticsService().logLoginError(e.toString());
       setState(() {
         _error = 'Erro durante login';
       });

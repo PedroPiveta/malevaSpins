@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:maleva_spins/models/collection_item.dart';
 import 'package:maleva_spins/models/track.dart';
+import 'package:maleva_spins/services/analytics_service.dart';
 import 'package:maleva_spins/services/discogs_api_service.dart';
 import 'package:maleva_spins/services/listening_timer_service.dart';
 
@@ -26,6 +27,11 @@ class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
   void initState() {
     super.initState();
     _fetchTracklist();
+    AnalyticsService().logAlbumViewed(
+      albumId: widget.album.id.toString(),
+      albumTitle: widget.album.basicInfo.title,
+      artistName: widget.album.basicInfo.artists.map((a) => a.name).join(', '),
+    );
   }
 
   Future<void> _fetchTracklist() async {
@@ -62,6 +68,12 @@ class _AlbumDetailsPageState extends State<AlbumDetailsPage> {
       artistName: widget.album.basicInfo.artists.map((a) => a.name).join(', '),
       coverImage:
           widget.album.basicInfo.coverImage ?? widget.album.basicInfo.thumb,
+    );
+
+    await AnalyticsService().logListeningStarted(
+      albumId: widget.album.id.toString(),
+      albumTitle: widget.album.basicInfo.title,
+      artistName: widget.album.basicInfo.artists.map((a) => a.name).join(', '),
     );
 
     if (context.mounted) {
